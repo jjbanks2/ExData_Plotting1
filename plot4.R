@@ -11,19 +11,29 @@ d<-data %>%
     filter(Date == "1/2/2007" | Date== "2/2/2007")
 d$DateTime <- strptime(paste(d$Date,d$Time),"%d/%m/%Y %H:%M:%S")
 
+#Convert gap to numeric
+d$Global_active_power<-as.numeric(as.character(d$Global_active_power))
+
 #Create panel set up
 par(mfrow=c(2,2))
 with(d, {
     
     # Global active power
-    plot(d$DateTime, d$Global_active_power,type="l", ylab="Global Active Power (kilowatts)",xlab="")
+    plot(d$DateTime, d$Global_active_power,
+         type="l", 
+         ylab="Global Active Power (kilowatts)",xlab="",
+         xaxt="n")
+    wday<-as.POSIXct(round(range(d$DateTime),"days"))
+    axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
 
     # Voltage
-    plot(d$DateTime, d$Voltage,type="l", ylab="Voltage",xlab="datetime")
+    plot(d$DateTime, d$Voltage,type="l", ylab="Voltage",xlab="datetime", xaxt="n")
+    wday<-as.POSIXct(round(range(d$DateTime),"days"))
+    axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
 
-    #Energy submetering
+        #Energy submetering
     plot(d$DateTime, d$Sub_metering_1,type="l", ylab="Energy sub metering",
-      xlab="", col="black")
+      xlab="", col="black", xaxt="n")
     lines(d$DateTime,d$Sub_metering_2,type="l",col="red")
     lines(d$DateTime,d$Sub_metering_3,type="l",col="blue")
     legend("topright", 
@@ -31,10 +41,14 @@ with(d, {
         lty=1,
         lwd=3,
         col=c("black", "red", "blue"))
+    wday<-as.POSIXct(round(range(d$DateTime),"days"))
+    axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
     
     #Global reactive power
     plot(d$DateTime, d$Global_reactive_power,type="l", 
-          ylab="Global_reactive_power", xlab="datetime")
+          ylab="Global_reactive_power", xlab="datetime", xaxt="n")
+    wday<-as.POSIXct(round(range(d$DateTime),"days"))
+    axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
  })
 
 #export to png file and close device
