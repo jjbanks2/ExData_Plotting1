@@ -9,13 +9,15 @@ data<-read.table("household_power_consumption.txt", sep=";", header=TRUE, na.str
 # subset to relevant dates
 d<-data %>%
     filter(Date == "1/2/2007" | Date== "2/2/2007")
+
 d$DateTime <- strptime(paste(d$Date,d$Time),"%d/%m/%Y %H:%M:%S")
-#d<-data.frame(d$Sub_metering_1, d$Sub_metering_2, d$Sub_metering_3, d$DateTime)
+
 
 #Create plot with 3 separate lines and legend
 plot(d$DateTime, d$Sub_metering_1,type="l",
               ylab="Energy sub metering",
-              xlab="", col="black")
+              xlab="", col="black",
+                xaxt="n")
 lines(d$DateTime,d$Sub_metering_2,type="l",col="red")
 lines(d$DateTime,d$Sub_metering_3,type="l",col="blue")
 legend("topright", 
@@ -24,6 +26,9 @@ legend("topright",
        lwd=2,
        col=c("black", "red", "blue")) 
 
+#Create and apply weekday labels
+wday<-as.POSIXct(round(range(d$DateTime),"days"))
+axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
 
 #export to png file and close device
 dev.copy(png, file="plot3.png", width=480, height=480)
