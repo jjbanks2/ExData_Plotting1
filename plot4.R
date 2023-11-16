@@ -3,10 +3,10 @@
 library(dplyr)
 library(datasets)
 
-# read in file
+#Read in file
 data<-read.table("household_power_consumption.txt", sep=";", header=TRUE, na.strings="?")
 
-# subset to relevant dates
+#Subset to relevant dates
 d<-data %>%
     filter(Date == "1/2/2007" | Date== "2/2/2007")
 d$DateTime <- strptime(paste(d$Date,d$Time),"%d/%m/%Y %H:%M:%S")
@@ -18,7 +18,7 @@ d$Global_active_power<-as.numeric(as.character(d$Global_active_power))
 par(mfrow=c(2,2))
 with(d, {
     
-    # Global active power
+    #Global active power
     plot(d$DateTime, d$Global_active_power,
          type="l", 
          ylab="Global Active Power (kilowatts)",xlab="",
@@ -26,12 +26,12 @@ with(d, {
     wday<-as.POSIXct(round(range(d$DateTime),"days"))
     axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
 
-    # Voltage
+    #Voltage
     plot(d$DateTime, d$Voltage,type="l", ylab="Voltage",xlab="datetime", xaxt="n")
     wday<-as.POSIXct(round(range(d$DateTime),"days"))
     axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
 
-        #Energy submetering
+    #Energy submetering
     plot(d$DateTime, d$Sub_metering_1,type="l", ylab="Energy sub metering",
       xlab="", col="black", xaxt="n")
     lines(d$DateTime,d$Sub_metering_2,type="l",col="red")
@@ -51,6 +51,6 @@ with(d, {
     axis.POSIXct(1, at=seq(wday[1],wday[2], by="days"),format="%a")
  })
 
-#export to png file and close device
+#Export to png file and close device
 dev.copy(png, file="plot4.png", width=480, height=480)
 dev.off()
