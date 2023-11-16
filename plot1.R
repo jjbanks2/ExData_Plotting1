@@ -15,5 +15,5 @@ hist(data$Global_active_power, xlab='Global Active Power (kilowatts)',
      ylab='Frequency', main="Global Active Power", col=2)
 
 #export to png file and close device
-dev.copy(png, file="plot1.png")
+dev.copy(png, file="plot1.png", width=480, height=480)
 dev.off()
